@@ -711,7 +711,17 @@
                 self.gotoDate(defDate);
             }
         } else {
-            self.gotoDate(new Date());
+            // Go to today or the earliest or latest available date
+            // if outside of available range
+            defDate = new Date();
+
+            if (opts.minDate && opts.minDate > defDate) {
+                defDate = opts.minDate;
+            } else if (opts.maxDate && opts.maxDate < defDate) {
+                defDate = opts.maxDate;
+            }
+
+            self.gotoDate(defDate);
         }
 
         if (opts.bound) {
