@@ -516,16 +516,23 @@
                     self.prevMonth();
                 }
                 else if (hasClass(target, 'pika-goto-today'))  {
+                    // Go to the month of today
                     var today = new Date();
+                    var todayEnabled = !self.dayIsDisabled(today);
                     self.gotoDate(today);
-                    self.setDate(today);
-                    if (opts.bound) {
-                        sto(function() {
-                            self.hide();
-                            if (opts.field) {
-                                opts.field.blur();
-                            }
-                        }, 100);
+
+                    // If today is enabled, select it and close
+                    // otherwise do nothing
+                    if (todayEnabled) {
+                        self.setDate(today);
+                        if (opts.bound) {
+                            sto(function() {
+                                self.hide();
+                                if (opts.field) {
+                                    opts.field.blur();
+                                }
+                            }, 100);
+                        }
                     }
                 }
                 else if (hasClass(target, 'pika-next')) {
