@@ -178,6 +178,7 @@ Pikaday has many useful options:
 * `onClose` callback function for when the picker is hidden
 * `onDraw` callback function for when the picker draws a new month
 * `keyboardInput` enable keyboard input support (default `true`)
+* `gotoTodayButton` enable Today button below the calendar to select the today date (if it is enabled/allowed)
 
 ### Styling
 
@@ -353,6 +354,7 @@ The default `i18n` configuration format looks like this:
 ```javascript
 i18n: {
     previousMonth : 'Previous Month',
+    today         : 'Today',
     nextMonth     : 'Next Month',
     months        : ['January','February','March','April','May','June','July','August','September','October','November','December'],
     weekdays      : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
@@ -362,6 +364,31 @@ i18n: {
 
 You must provide 12 months and 7 weekdays (with abbreviations). Always specify weekdays in this order with Sunday first. You can change the `firstDay` option to reorder if necessary (0: Sunday, 1: Monday, etc). You can also set `isRTL` to `true` for languages that are read right-to-left.
 
+There's an Italian example function called `itDate()` inside the `pikaday-functions.js` file.
+
+### Advanced examples
+
+Using the `pickday-functions.js` file you can automatically disable Saturdays, Sundays and Italian holidays in this way:
+
+```javascript
+var picker = new Pikaday({ 
+			field: document.getElementById('data_field'),
+			trigger: document.getElementById('calendar_button'),
+			i18n: itDate(),	
+			firstDay: 1, disableDayFn: disabilitaDomenicheFestivi,
+			onClose: function(date) {
+				if (this.toString())
+					document.getElementById('calendar_button').form.submit();
+			},
+			showDaysInNextAndPreviousMonths: true,
+			enableSelectionDaysInNextAndPreviousMonths: true,
+			showWeekNumber: true,
+			minDate: pdStringToDate('13/12/2020',''),
+			maxDate: new Date(),
+			defaultDate: null, setDefaultDate: false,
+			gotoTodayButton: true, keyboardInput: false,
+			format: 'DD/MM/YYYY', toString: pdDateToString, parse: pdStringToDate });
+```
 
 ## Extensions
 
