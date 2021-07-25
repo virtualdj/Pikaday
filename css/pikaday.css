@@ -156,7 +156,8 @@ http://nicolasgallagher.com/micro-clearfix-hack/
     height: initial;
 }
 
-.pika-goto-today {
+.pika-goto-today,
+.pika-goto-today-disabled {
     cursor: pointer;
     display: block;
     box-sizing: border-box;
@@ -177,6 +178,9 @@ http://nicolasgallagher.com/micro-clearfix-hack/
     font-weight: bold;
     background: transparent;
     /* background: #f5f5f5;*/
+}
+.pika-goto-today-disabled {
+    color: #D5E9F7;
 }
 
 .pika-week {

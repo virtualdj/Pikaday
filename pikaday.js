@@ -411,7 +411,7 @@
     renderFooter = function(opts)
     {
         var i, arr = [];
-        arr.push('<td colspan="'+(opts.showWeekNumber?'8':'7')+'"><button class="pika-goto-today">'+opts.i18n.today+'</button></td>');
+        arr.push('<td colspan="'+(opts.showWeekNumber?'8':'7')+'"><button class="' + (opts.isTodayDisabled ? 'pika-goto-today-disabled' : 'pika-goto-today') + '">'+opts.i18n.today+'</button></td>');
         return '<tfoot>' + (opts.isRTL ? arr.reverse() : arr).join('') + '</tfoot>';
     },
 
@@ -516,14 +516,16 @@
                     self.prevMonth();
                 }
                 else if (hasClass(target, 'pika-goto-today'))  {
-                    // Go to the month of today
+                    // Get today date (without time)
                     var today = new Date();
-                    var todayEnabled = !self.dayIsDisabled(today);
+                    setToStartOfDay(today);
+
+                    // Go to the month of today
                     self.gotoDate(today);
 
                     // If today is enabled, select it and close
                     // otherwise do nothing
-                    if (todayEnabled) {
+                    if (!opts.isTodayDisabled) {
                         self.setDate(today);
                         if (opts.bound) {
                             sto(function() {
@@ -937,11 +939,20 @@
             this.adjustCalendars();
         },
 
+        /**
+         * determine if a specific date is disabled
+         */
         dayIsDisabled: function(date) {
 
             var config = this.config(),
                 disabled = false;
 
+            if (config.minDate && config.minDate > date) {
+                return true;
+            }
+            if (config.maxDate && config.maxDate < date) {
+                return true;
+            }
             if (config.disableDayFn) {
                 disabled = config.disableDayFn(date);
             }
@@ -1288,6 +1299,21 @@
                     row = [];
                     r = 0;
                     isWeekSelected = false;
+                }
+            }
+            opts.isTodayDisabled = false;
+            if (opts.gotoTodayButton) {
+                if (opts.minDate && opts.minDate > now) {
+                    opts.isTodayDisabled = true;
+                }
+                if (opts.maxDate && opts.maxDate < now) {
+                    opts.isTodayDisabled = true;
+                }
+                if (opts.disableDayFn) {
+                    opts.isTodayDisabled = opts.isTodayDisabled || opts.disableDayFn(now);
+                }
+                if (opts.disableWeekends) {
+                    opts.isTodayDisabled = opts.isTodayDisabled || (now.getDay() < 1 || 5 < now.getDay());
                 }
             }
             return renderTable(opts, data, randId);
