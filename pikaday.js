@@ -239,6 +239,7 @@
         minMonth: undefined,
         maxMonth: undefined,
 
+        gotoTodayButton: false,
         startRange: null,
         endRange: null,
 
@@ -272,6 +273,7 @@
         // internationalization
         i18n: {
             previousMonth : 'Previous Month',
+            today         : 'Today',
             nextMonth     : 'Next Month',
             months        : ['January','February','March','April','May','June','July','August','September','October','November','December'],
             weekdays      : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
@@ -406,6 +408,13 @@
         return '<thead><tr>' + (opts.isRTL ? arr.reverse() : arr).join('') + '</tr></thead>';
     },
 
+    renderFooter = function(opts)
+    {
+        var i, arr = [];
+        arr.push('<td colspan="'+(opts.showWeekNumber?'8':'7')+'"><button class="pika-goto-today">'+opts.i18n.today+'</button></td>');
+        return '<tfoot>' + (opts.isRTL ? arr.reverse() : arr).join('') + '</tfoot>';
+    },
+
     renderTitle = function(instance, c, year, month, refYear, randId)
     {
         var i, j, arr,
@@ -468,7 +477,7 @@
 
     renderTable = function(opts, data, randId)
     {
-        return '<table cellpadding="0" cellspacing="0" class="pika-table" role="grid" aria-labelledby="' + randId + '">' + renderHead(opts) + renderBody(data) + '</table>';
+        return '<table cellpadding="0" cellspacing="0" class="pika-table" role="grid" aria-labelledby="' + randId + '">' + renderHead(opts) + renderBody(data) + (opts.gotoTodayButton ? renderFooter(opts) :'') + '</table>';
     },
 
 
@@ -505,6 +514,10 @@
                 }
                 else if (hasClass(target, 'pika-prev')) {
                     self.prevMonth();
+                }
+                else if (hasClass(target, 'pika-goto-today')) {
+                    self.setDate(new Date(), true);                    
+                    self.gotoToday();
                 }
                 else if (hasClass(target, 'pika-next')) {
                     self.nextMonth();
