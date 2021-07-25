@@ -515,9 +515,18 @@
                 else if (hasClass(target, 'pika-prev')) {
                     self.prevMonth();
                 }
-                else if (hasClass(target, 'pika-goto-today')) {
-                    self.setDate(new Date(), true);                    
-                    self.gotoToday();
+                else if (hasClass(target, 'pika-goto-today'))  {
+                    var today = new Date();
+                    self.gotoDate(today);
+                    self.setDate(today);
+                    if (opts.bound) {
+                        sto(function() {
+                            self.hide();
+                            if (opts.field) {
+                                opts.field.blur();
+                            }
+                        }, 100);
+                    }
                 }
                 else if (hasClass(target, 'pika-next')) {
                     self.nextMonth();
